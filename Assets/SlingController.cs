@@ -20,8 +20,7 @@ public class SlingController : MonoBehaviour
         DefaultPosition.x = 0f;
         DefaultPosition.y = -3f;
         this.transform.position = DefaultPosition;
-        
-        // set the default scale of the controller for the sling shot
+        // the default scale of the controller for the controller 
         DefaultScale.x = radius;
         DefaultScale.y = radius;
         this.transform.localScale = DefaultScale;
@@ -56,5 +55,47 @@ public class SlingController : MonoBehaviour
             TouchSpotted = true;
             return;
         }
+    }
+
+    // check if the input was detected and if it was .... move the controller accordingly
+    public void controller_movement()
+    {
+        // reset the touch in case the function returns at any stage due to out of bounds or no touch issue
+        TouchSpotted = false;
+        // see if the button was not selected ... and don't do anything if that is the case
+        if (!TouchSpotted)
+            return;
+        // see if there is still a touch input cause if there isnt this function cannot go ahead
+        if (Input.touchCount == 0)
+            return;
+        int MinIndex = -1;
+        float MinDistance = radius * 3;
+        for (int i = 0; i < Input.touchCount; i++)
+        {
+            Touch touchInput = Input.GetTouch(i);
+            // get its position
+            Vector2 touchPosition = touchInput.position;
+            // convert to world points so that it can be compared to sprite position later
+            Vector2 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, Camera.main.nearClipPlane));
+            // calculate distance
+            float distance = Vector2.Distance(worldPosition,this.transform.position);
+            // see which touch input is closest to the controller and within a certain radius
+            if(MinDistance >= distance)
+            {
+                MinDistance = distance;
+                MinIndex = i;
+            }
+        }
+        // in case the touch was too far or not detected at all
+        if (MinIndex == -1)
+            return;
+        Touch touchInputFinal = Input.GetTouch(MinIndex);
+        // get its position
+        Vector2 touchPositionFinal = touchInputFinal.position;
+        // convert to world points so that it can be compared to sprite position later
+        Vector2 worldPositionFinal = Camera.main.ScreenToWorldPoint(new Vector3(touchPositionFinal.x, touchPositionFinal.y, Camera.main.nearClipPlane));
+        // assign the position to the controller
+        this.transform.position = worldPositionFinal;
+        TouchSpotted = true;
     }
 }
