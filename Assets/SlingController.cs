@@ -30,6 +30,7 @@ public class SlingController : MonoBehaviour
     void Update()
     {
         controller_activation();
+        controller_movement();
     }
 
     // detect if any of the touch inputs uses controller and if it does it activates a private variable
@@ -53,6 +54,7 @@ public class SlingController : MonoBehaviour
                 continue;
             // but if it is... assign its index to the Touch spotted variable for future use
             TouchSpotted = true;
+            Debug.Log("Input Detected on radius");
             return;
         }
     }
@@ -60,14 +62,14 @@ public class SlingController : MonoBehaviour
     // check if the input was detected and if it was .... move the controller accordingly
     public void controller_movement()
     {
-        // reset the touch in case the function returns at any stage due to out of bounds or no touch issue
-        TouchSpotted = false;
         // see if the button was not selected ... and don't do anything if that is the case
         if (!TouchSpotted)
             return;
         // see if there is still a touch input cause if there isnt this function cannot go ahead
         if (Input.touchCount == 0)
             return;
+        // reset the touch in case the function returns at any stage due to out of bounds or no touch issue
+        TouchSpotted = false;
         int MinIndex = -1;
         float MinDistance = radius * 3;
         for (int i = 0; i < Input.touchCount; i++)
