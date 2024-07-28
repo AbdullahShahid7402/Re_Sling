@@ -72,7 +72,8 @@ public class SlingController : MonoBehaviour
         if (Input.touchCount == 0)
             return;
         int MinIndex = -1;
-        float MinDistance = radius * 3;
+        float MaxDistance = radius * 4;
+        float ControllerRange = radius * 2;
         for (int i = 0; i < Input.touchCount; i++)
         {
             Touch touchInput = Input.GetTouch(i);
@@ -83,9 +84,9 @@ public class SlingController : MonoBehaviour
             // calculate distance
             float distance = Vector2.Distance(worldPosition,this.transform.position);
             // see which touch input is closest to the controller and within a certain radius
-            if(MinDistance >= distance)
+            if(MaxDistance >= distance)
             {
-                MinDistance = distance;
+                MaxDistance = distance;
                 MinIndex = i;
             }
         }
@@ -97,6 +98,18 @@ public class SlingController : MonoBehaviour
         Vector2 touchPositionFinal = touchInputFinal.position;
         // convert to world points so that it can be compared to sprite position later
         Vector2 worldPositionFinal = Camera.main.ScreenToWorldPoint(new Vector3(touchPositionFinal.x, touchPositionFinal.y, Camera.main.nearClipPlane));
+        // set the worldPosition point to a limit so that it cant go beyond a certain point on screen
+        if (Vector2.Distance(worldPositionFinal,DefaultPosition) > ControllerRange)
+        {
+            // subtract default positiion to get this vector back to origin
+            worldPositionFinal -= DefaultPosition;
+            // normalize the vector so that it can be ladter scaled according to the desired range
+            worldPositionFinal.Normalize();
+            // scaling to desired range
+            worldPositionFinal *= ControllerRange;
+            // adding the default position to get the resultant vector off origin to where it should be on screen
+            worldPositionFinal += DefaultPosition;
+        }
         // assign the position to the controller
         this.transform.position = worldPositionFinal;
         TouchSpotted = true;
