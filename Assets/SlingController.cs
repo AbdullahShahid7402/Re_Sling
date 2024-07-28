@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class SlingController : MonoBehaviour
@@ -31,6 +32,7 @@ public class SlingController : MonoBehaviour
     {
         controller_activation();
         controller_movement();
+        controller_reset();
     }
 
     // detect if any of the touch inputs uses controller and if it does it activates a private variable
@@ -54,7 +56,6 @@ public class SlingController : MonoBehaviour
                 continue;
             // but if it is... assign its index to the Touch spotted variable for future use
             TouchSpotted = true;
-            Debug.Log("Input Detected on radius");
             return;
         }
     }
@@ -65,11 +66,11 @@ public class SlingController : MonoBehaviour
         // see if the button was not selected ... and don't do anything if that is the case
         if (!TouchSpotted)
             return;
+        // reset the touch in case the function returns at any stage due to out of bounds or no touch issue
+        TouchSpotted = false;
         // see if there is still a touch input cause if there isnt this function cannot go ahead
         if (Input.touchCount == 0)
             return;
-        // reset the touch in case the function returns at any stage due to out of bounds or no touch issue
-        TouchSpotted = false;
         int MinIndex = -1;
         float MinDistance = radius * 3;
         for (int i = 0; i < Input.touchCount; i++)
@@ -99,5 +100,32 @@ public class SlingController : MonoBehaviour
         // assign the position to the controller
         this.transform.position = worldPositionFinal;
         TouchSpotted = true;
+    }
+
+    // in case the input is released return the controller to its initial positions
+    public void controller_reset()
+    {
+        // in case the player re initiates the contact with controller... do not go to initial position
+        if (TouchSpotted)
+            return;
+        // get the distance
+        float distance = Vector2.Distance(this.transform.position,DefaultPosition);
+        // in case the distance is too less just get to the initial position
+        if (distance < 0.01)
+        {
+            this.transform.position = DefaultPosition;
+            return;
+        }
+        // make a ector that makes a calculation of haf distance location 
+        // between current position and the default position
+        // this makes the animation look smooth and fluid 
+        Vector2 move;
+        move.x = (DefaultPosition.x - this.transform.position.x)/2;
+        move.y = (DefaultPosition.y - this.transform.position.y)/2;
+        move.x += this.transform.position.x;
+        move.y += this.transform.position.y;
+        // set that as current position of the controller
+        this.transform.position = move;
+        return;
     }
 }
