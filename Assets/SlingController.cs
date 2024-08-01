@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class SlingController : MonoBehaviour
 {
+    public static Vector2 displacement;
+    public static bool fired;
     // variables for default position and scale of the sling shot controller so it can be set to the default size and position
     private Vector2 DefaultPosition, DefaultScale;
     // stores the radius of the controller and also acts as a hitbox limit for initial contact with the controller
@@ -14,6 +16,7 @@ public class SlingController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        fired = false;
         TouchSpotted = false;
         // set the value of radius that is basically also going to help as hitbox of the controller
         radius = 0.5f;
@@ -25,6 +28,7 @@ public class SlingController : MonoBehaviour
         DefaultScale.x = radius;
         DefaultScale.y = radius;
         this.transform.localScale = DefaultScale;
+        displacement = DefaultPosition;
     }
 
     // Update is called once per frame
@@ -33,6 +37,16 @@ public class SlingController : MonoBehaviour
         controller_activation();
         controller_movement();
         controller_reset();
+    }
+
+    public static Vector2 Get_Displacement()
+    {
+        // dont return anything if the displacement is none
+        if (!fired)
+            return new Vector2(0f,0f);
+        // reset fired and return the displacement
+        fired = false;
+        return displacement;
     }
 
     // detect if any of the touch inputs uses controller and if it does it activates a private variable
@@ -71,6 +85,7 @@ public class SlingController : MonoBehaviour
         // see if there is still a touch input cause if there isnt this function cannot go ahead
         if (Input.touchCount == 0)
             return;
+        
         int MinIndex = -1;
         float MaxDistance = radius * 4;
         float ControllerRange = radius * 2;
@@ -112,6 +127,9 @@ public class SlingController : MonoBehaviour
         }
         // assign the position to the controller
         this.transform.position = worldPositionFinal;
+        // make sure the displacement is updated if the shot isnt fired yet
+        if (!fired)
+            displacement = worldPositionFinal - DefaultPosition;
         TouchSpotted = true;
     }
 
@@ -129,7 +147,7 @@ public class SlingController : MonoBehaviour
             this.transform.position = DefaultPosition;
             return;
         }
-        // make a ector that makes a calculation of haf distance location 
+        // make a vector that makes a calculation of haf distance location 
         // between current position and the default position
         // this makes the animation look smooth and fluid 
         Vector2 move;
