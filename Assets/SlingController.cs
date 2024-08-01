@@ -46,7 +46,9 @@ public class SlingController : MonoBehaviour
             return new Vector2(0f,0f);
         // reset fired and return the displacement
         fired = false;
-        return displacement;
+        Vector2 Result = new Vector2(displacement.x,displacement.y);
+        displacement = new Vector2(0f,0f);
+        return Result;
     }
 
     // detect if any of the touch inputs uses controller and if it does it activates a private variable
@@ -128,8 +130,8 @@ public class SlingController : MonoBehaviour
         // assign the position to the controller
         this.transform.position = worldPositionFinal;
         // make sure the displacement is updated if the shot isnt fired yet
-        if (!fired)
-            displacement = worldPositionFinal - DefaultPosition;
+        displacement = worldPositionFinal - DefaultPosition;
+        fired = false;
         TouchSpotted = true;
     }
 
@@ -147,6 +149,7 @@ public class SlingController : MonoBehaviour
             this.transform.position = DefaultPosition;
             return;
         }
+        fired = true;
         // make a vector that makes a calculation of haf distance location 
         // between current position and the default position
         // this makes the animation look smooth and fluid 

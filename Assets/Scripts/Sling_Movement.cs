@@ -1,3 +1,5 @@
+using System;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Sling_Movement : MonoBehaviour
@@ -22,23 +24,14 @@ public class Sling_Movement : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        Vector2 ControllerOutput = SlingController.Get_Displacement();
+        ControllerOutput *= -1;
+        if(Math.Abs(ControllerOutput.x) > 0.001f && Math.Abs(ControllerOutput.y) > 0.001f)
         {
-            Debug.Log("Up");
-            startPos = cam.ScreenToWorldPoint(Input.mousePosition);
-            startPos.z = 15;
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            Debug.Log("Down");
-            endPos = cam.ScreenToWorldPoint(Input.mousePosition);
-            endPos.z = 15;
-
-            force = new Vector2(Mathf.Clamp(startPos.x - endPos.x, minPower.x, maxPower.x), Mathf.Clamp(startPos.y - endPos.y, minPower.y, maxPower.y));
+            Debug.Log(ControllerOutput.x.ToString()+","+ControllerOutput.y.ToString());
+            force = new Vector2(Mathf.Clamp(ControllerOutput.x, minPower.x, maxPower.x), Mathf.Clamp(ControllerOutput.y, minPower.y, maxPower.y));
             rb.AddForce(force * power, ForceMode2D.Impulse);
         }
-
     }
 
 }
