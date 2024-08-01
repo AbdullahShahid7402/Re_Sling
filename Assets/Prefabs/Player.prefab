@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8586299541875783953}
   - component: {fileID: 4682756992140275123}
-  - component: {fileID: 6718393547469843692}
   - component: {fileID: 3574481185421109081}
   m_Layer: 0
   m_Name: Player
@@ -29,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5919401151591249047}
@@ -64,27 +63,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6718393547469843692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 391203503147293228}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e809948c3f13af7458891759c53950e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 3000
-  jumpForce: 100000
-  positionRadius: 0.3
-  anim: {fileID: 0}
-  rb: {fileID: 5837576829184020941}
-  pos: {fileID: 2787372363968771069}
-  ground:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!114 &3574481185421109081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,7 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 5837576829184020941}
-  power: 70
+  power: 120
   minPower: {x: -8, y: -8}
   maxPower: {x: 8, y: 8}
 --- !u!1 &1000705868630761533
