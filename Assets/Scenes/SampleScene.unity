@@ -1937,6 +1937,7 @@ GameObject:
   - component: {fileID: 1654055090}
   - component: {fileID: 1654055091}
   - component: {fileID: 1654055092}
+  - component: {fileID: 1654055093}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1996,7 +1997,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654055089}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e809948c3f13af7458891759c53950e9, type: 3}
   m_Name: 
@@ -2010,6 +2011,22 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 64
+--- !u!114 &1654055093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654055089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20dfa4f946486e46812be2a90093a5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 139295816}
+  power: 10
+  minPower: {x: -8, y: -8}
+  maxPower: {x: 8, y: 8}
 --- !u!1 &1752110398
 GameObject:
   m_ObjectHideFlags: 0
