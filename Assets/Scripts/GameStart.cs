@@ -9,26 +9,29 @@ public class GameStart : MonoBehaviour
     public GameObject ControllerPrefab;
     public static GameObject Player;
     // private GameObject Controller;
-    private GameObject Wall1;
-    private GameObject Wall2;
+    private GameObject[] Walls;
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 30;
         Player = Instantiate(PlayerPrefab);
         Instantiate(ControllerPrefab);
-        Wall1 = Instantiate(AttachableWallPrefab);
-        Wall2 = Instantiate(AttachableWallPrefab);
+        Walls = new GameObject[2];
+        for (int i = 0; i < Walls.Length; i++)
+        {
+            Walls[i] = Instantiate(AttachableWallPrefab);
+        }
 
         Player.transform.position = new Vector2(0f,1f);
-        Wall1.transform.position = new Vector2(4.5f,10f);
-        Wall1.transform.localScale = new Vector2(1f,7.5f);
-        Wall2.transform.position = new Vector2(-4.5f,10f);
-        Wall2.transform.localScale = new Vector2(1f,7.5f);
+        Walls[0].transform.position = new Vector2(4.5f,10f);
+        Walls[0].transform.localScale = new Vector2(1f,7.5f);
+        Walls[1].transform.position = new Vector2(-4.5f,10f);
+        Walls[1].transform.localScale = new Vector2(1f,7.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 }

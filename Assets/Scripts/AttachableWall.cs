@@ -20,16 +20,17 @@ public class AttachableWall : MonoBehaviour
         // Debug.Log(GameStart.Player.transform.position.x.ToString());
         if (Attached)
         {
+            // Debug.Log("Attached");
             Sling_Movement.GoTo = Player_Coordinates;
         }
         float collisionMargin = 2f + 1f;
         if (!Attached && Math.Abs(GameStart.Player.transform.position.x-this.transform.position.x)<collisionMargin)
         {
-            Debug.Log("Attaching");
+            // Debug.Log("Attaching");
             Attached = true;
             Player_Coordinates = GameStart.Player.transform.position;
         }
-        else if(Math.Abs(GameStart.Player.transform.position.x-this.transform.position.x)>=collisionMargin)
+        else if(Attached && Math.Abs(GameStart.Player.transform.position.x-this.transform.position.x)>=collisionMargin)
         {
             Attached = false;
             Sling_Movement.GoTo = new Vector2(0f,0f);
