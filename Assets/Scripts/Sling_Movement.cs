@@ -17,9 +17,12 @@ public class Sling_Movement : MonoBehaviour
     private Vector3 startPos;
     private Vector3 endPos;
 
+    public static Vector2 GoTo;
+
     private void Start()
     {
         cam = Camera.main;
+        GoTo = new Vector2(0f,0f);
     }
 
     private void Update()
@@ -28,26 +31,15 @@ public class Sling_Movement : MonoBehaviour
         ControllerOutput *= -1;
         if(Math.Abs(ControllerOutput.x) > 0.001f && Math.Abs(ControllerOutput.y) > 0.001f)
         {
-            Debug.Log(ControllerOutput.x.ToString()+","+ControllerOutput.y.ToString());
+            // Debug.Log(ControllerOutput.x.ToString()+","+ControllerOutput.y.ToString());
             force = new Vector2(Mathf.Clamp(ControllerOutput.x, minPower.x, maxPower.x), Mathf.Clamp(ControllerOutput.y, minPower.y, maxPower.y));
             rb.AddForce(force * power, ForceMode2D.Impulse);
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Wall"))
+        if (Vector2.Distance(new Vector2(0f,0f),GoTo) > 0.01f)
         {
-            Destroy(gameObject);
+            float scaleDownFactor = 10;
+            force = new Vector2(Mathf.Clamp(-GoTo.x+GameStart.Player.transform.position.x, minPower.x, maxPower.x), Mathf.Clamp((-GoTo.y+GameStart.Player.transform.position.y) * 0, minPower.y, maxPower.y));
+            rb.AddForce(force * power / scaleDownFactor, ForceMode2D.Impulse);
         }
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Wall"))
-        {
-            Destroy(gameObject);
-        }
-    }
-
 }
