@@ -8,7 +8,7 @@ public class SlingController : MonoBehaviour
     public static Vector2 displacement;
     public static bool fired;
     // variables for default position and scale of the sling shot controller so it can be set to the default size and position
-    private Vector2 DefaultPosition, DefaultScale;
+    private Vector3 DefaultPosition, DefaultScale;
     // stores the radius of the controller and also acts as a hitbox limit for initial contact with the controller
     private float radius;
     // stores whether a touch input that was detected to have controller interaction
@@ -23,10 +23,12 @@ public class SlingController : MonoBehaviour
         // set default position of the controller for the sling shot
         DefaultPosition.x = 0f;
         DefaultPosition.y = -3f;
-        this.transform.position = DefaultPosition;
+        DefaultPosition.z = 1f;
+        this.transform.localPosition = DefaultPosition;
         // the default scale of the controller for the controller 
         DefaultScale.x = radius;
         DefaultScale.y = radius;
+        DefaultScale.z = 1f;
         this.transform.localScale = DefaultScale;
         displacement = DefaultPosition;
     }
@@ -66,9 +68,10 @@ public class SlingController : MonoBehaviour
             Vector2 touchPosition = touchInput.position;
             // convert to world points so that it can be compared to sprite position later
             Vector2 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, Camera.main.nearClipPlane));
+            worldPosition -= new Vector2(CameraMovement.Camera.transform.position.x,CameraMovement.Camera.transform.position.y);
             // see if it is in the radius of the controller and if it isnt ...
             // just move to next iteration to check if any othe input works fine
-            if (Vector2.Distance(worldPosition,this.transform.position) > radius)
+            if (Vector2.Distance(worldPosition,this.transform.localPosition) > radius)
                 continue;
             // but if it is... assign its index to the Touch spotted variable for future use
             TouchSpotted = true;
@@ -98,8 +101,9 @@ public class SlingController : MonoBehaviour
             Vector2 touchPosition = touchInput.position;
             // convert to world points so that it can be compared to sprite position later
             Vector2 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(touchPosition.x, touchPosition.y, Camera.main.nearClipPlane));
+            worldPosition -= new Vector2(CameraMovement.Camera.transform.position.x,CameraMovement.Camera.transform.position.y);
             // calculate distance
-            float distance = Vector2.Distance(worldPosition,this.transform.position);
+            float distance = Vector2.Distance(worldPosition,this.transform.localPosition);
             // see which touch input is closest to the controller and within a certain radius
             if(MaxDistance >= distance)
             {
@@ -115,22 +119,23 @@ public class SlingController : MonoBehaviour
         Vector2 touchPositionFinal = touchInputFinal.position;
         // convert to world points so that it can be compared to sprite position later
         Vector2 worldPositionFinal = Camera.main.ScreenToWorldPoint(new Vector3(touchPositionFinal.x, touchPositionFinal.y, Camera.main.nearClipPlane));
+        worldPositionFinal -= new Vector2(CameraMovement.Camera.transform.position.x,CameraMovement.Camera.transform.position.y);
         // set the worldPosition point to a limit so that it cant go beyond a certain point on screen
         if (Vector2.Distance(worldPositionFinal,DefaultPosition) > ControllerRange)
         {
             // subtract default positiion to get this vector back to origin
-            worldPositionFinal -= DefaultPosition;
+            worldPositionFinal -= new Vector2(DefaultPosition.x,DefaultPosition.y);
             // normalize the vector so that it can be ladter scaled according to the desired range
             worldPositionFinal.Normalize();
             // scaling to desired range
             worldPositionFinal *= ControllerRange;
             // adding the default position to get the resultant vector off origin to where it should be on screen
-            worldPositionFinal += DefaultPosition;
+            worldPositionFinal += new Vector2(DefaultPosition.x,DefaultPosition.y);
         }
         // assign the position to the controller
-        this.transform.position = worldPositionFinal;
+        this.transform.localPosition = new Vector3(worldPositionFinal.x,worldPositionFinal.y,1f);
         // make sure the displacement is updated if the shot isnt fired yet
-        displacement = worldPositionFinal - DefaultPosition;
+        displacement = worldPositionFinal - new Vector2(DefaultPosition.x,DefaultPosition.y);;
         fired = false;
         TouchSpotted = true;
     }
@@ -142,11 +147,11 @@ public class SlingController : MonoBehaviour
         if (TouchSpotted)
             return;
         // get the distance
-        float distance = Vector2.Distance(this.transform.position,DefaultPosition);
+        float distance = Vector2.Distance(this.transform.localPosition,DefaultPosition);
         // in case the distance is too less just get to the initial position
         if (distance < 0.01)
         {
-            this.transform.position = DefaultPosition;
+            this.transform.localPosition = DefaultPosition;
             return;
         }
         fired = true;
@@ -154,12 +159,12 @@ public class SlingController : MonoBehaviour
         // between current position and the default position
         // this makes the animation look smooth and fluid 
         Vector2 move;
-        move.x = (DefaultPosition.x - this.transform.position.x)/2;
-        move.y = (DefaultPosition.y - this.transform.position.y)/2;
-        move.x += this.transform.position.x;
-        move.y += this.transform.position.y;
+        move.x = (DefaultPosition.x - this.transform.localPosition.x)/2;
+        move.y = (DefaultPosition.y - this.transform.localPosition.y)/2;
+        move.x += this.transform.localPosition.x;
+        move.y += this.transform.localPosition.y;
         // set that as current position of the controller
-        this.transform.position = move;
+        this.transform.localPosition = new Vector3(move.x,move.y,1f);
         return;
     }
 }
